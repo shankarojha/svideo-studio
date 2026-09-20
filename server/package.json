@@ -1,17 +1,23 @@
 {
   "name": "server",
   "version": "1.0.0",
-  "description": "sefver for svideo_studio",
+  "description": "server for svideo_studio",
   "license": "ISC",
   "author": "shankarojha",
-  "type": "commonjs",
-  "main": "app.js",
+  "type": "module",
+  "main": "index.ts",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "dev": "tsx watch src/index.ts",
+    "build": "tsc",
+    "start": "node dist/index.js"
   },
   "dependencies": {
+    "@supabase/supabase-js": "^2.116.0",
     "cors": "^2.8.6",
-    "express": "^5.2.1"
+    "dotenv": "^18.0.1",
+    "express": "^5.2.1",
+    "zod": "^4.6.5"
   },
   "devDependencies": {
     "@types/cors": "^2.8.19",
