@@ -1,14 +1,8 @@
 import 'dotenv/config';
 import { createClient } from '@supabase/supabase-js';
+import type { Database } from '../types/database.types.js';
 
-const supabaseUrl = process.env.SUPABASE_URL;
-const supabaseSecretKey = process.env.SUPABASE_SECRET_KEY;
-
-if (!supabaseUrl || !supabaseSecretKey) {
-  throw new Error('Missing Supabase environment variables');
-}
-
-export const supabase = createClient(
-  supabaseUrl,
-  supabaseSecretKey
+export const supabase = createClient<Database>(
+  process.env.SUPABASE_URL!,
+  process.env.SUPABASE_SECRET_KEY!,
 );

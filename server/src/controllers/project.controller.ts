@@ -1,36 +1,53 @@
 import type { Request, Response } from 'express';
-import { createProject } from '../services/project.service.js';
-import { createProjectSchema } from '../validators/project.validator.js';
+//PROJECT SERVICE
+import { createProject, getProjects, getProjectById } from '../services/project.service.js';
+//ZOD VALIDATOR
+import { createProjectSchema, projectIdSchema } from '../validators/project.validator.js';
+//ASYNC HANDLER
+import { asyncHandler } from '../utils/async-handler.js';
 
-export const createProjectController = async (
-  req: Request,
-  res: Response,
-) => {
-  try {
-    const validationResult = createProjectSchema.safeParse(req.body);
-
-    if (!validationResult.success) {
-      res.status(400).json({
-        status: 'error',
-        message: 'Invalid request data',
-        errors: validationResult.error.flatten().fieldErrors,
-      });
-
-      return;
-    }
-
-    const project = await createProject(validationResult.data);
+export const createProjectController = asyncHandler(
+  async (req: Request, res: Response) => {
+    const project = await createProject(req.body);
 
     res.status(201).json({
       status: 'success',
       data: project,
     });
-  } catch (error) {
-    console.error('Create project controller error:', error);
+  },
+);
 
-    res.status(500).json({
-      status: 'error',
-      message: 'Failed to create project',
+export const getProjectsController = asyncHandler(
+  async (_req: Request, res: Response) => {
+    const projects = await getProjects();
+
+    res.status(200).json({
+      status: 'success',
+      data: projects,
     });
-  }
-};
+  },
+);
+
+export const getProjectByIdController = asyncHandler(
+  async (
+    req: Request<{ projectId: string }>,
+    res: Response,
+  ) => {
+    const project = await getProjectById(req.params.projectId);
+
+    if (!project) {
+      res.status(404).json({
+        status: 'error',
+        message: 'Invalid project ID',
+        errors: "No projects found with this id",
+      });
+
+      return;
+    }
+
+    res.status(200).json({
+      status: 'success',
+      data: project,
+    });
+  },
+);

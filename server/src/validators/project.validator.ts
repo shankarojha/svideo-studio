@@ -13,3 +13,11 @@ export const createProjectSchema = z.object({
         .max(500, 'Project description must be 500 characters or less')
         .optional(),
 });
+
+export const projectIdSchema = z.object({
+    projectId: z.string().uuid('Invalid project ID'),
+});
+
+export type CreateProjectInput = z.infer<typeof createProjectSchema>;
+
+export type ProjectIdParams = z.infer<typeof projectIdSchema>;
